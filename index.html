@@ -1,41 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>问卷</title>
-    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-    <script>LA.init({id:"3QgPNqmfjXx2Y6Hx",ck:"3QgPNqmfjXx2Y6Hx",autoTrack:true})</script>
-</head>
-<body>
-    <h3>本次问卷</h3>
-    <p>土耳其首都在哪？</p>
-    <ul id="optionList" style="font-size:18px; line-height:2.2;">
-        <li data-event="问卷选项_选择A_君士坦丁堡" onclick="selectOption(this)" style="cursor:pointer;">A：君士坦丁堡</li>
-        <li data-event="问卷选项_选择B_安卡拉" onclick="selectOption(this)" style="cursor:pointer;">B：安卡拉</li>
-        <li data-event="问卷选项_选择C_华沙" onclick="selectOption(this)" style="cursor:pointer;">C：华沙</li>
-    </ul>
-    <button onclick="submitSurvey()" style="margin-top:20px;padding:6px 16px;">提交问卷</button>
-
-    <script>
-        let selectedEvent = "";
-        function selectOption(el) {
-            document.querySelectorAll("#optionList li").forEach(item=>{
-                item.style.color = "#000";
-                item.style.fontWeight = "normal";
-            })
-            el.style.color = "#0066cc";
-            el.style.fontWeight = "bold";
-            selectedEvent = el.dataset.event;
-            LA.event(selectedEvent);
-        }
-        function submitSurvey() {
-            if(!selectedEvent){
-                alert("请先选择一个选项！");
-                return;
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>杨的静态网站</title>
+    </head>
+    <body>
+        <p>未完成的网站</p>
+        <script>
+            alert("提示弹窗");
+            let name = prompt("请输入你的用户名");
+            if(name == "黄嘉祥"){
+                alert("还在测试中的网站");
+            }else{
+                alert("目前未有其他功能");
             }
-            LA.event("问卷_点击提交");
-            alert("提交成功！");
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>
