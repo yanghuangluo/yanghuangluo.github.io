@@ -1,16 +1,56 @@
-<!--
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"3QgPNqmfjXx2Y6Hx",ck:"3QgPNqmfjXx2Y6Hx",autoTrack:true})</script>
--->
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
+        <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+        <script>LA.init({id:"3QgPNqmfjXx2Y6Hx",ck:"3QgPNqmfjXx2Y6Hx",autoTrack:true})</script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>地理知识问答网站</title>
+        <title>历地政知识问答</title>
+        <!-- Supabase SDK引入 -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script>
+            const SUPABASE_URL = "https://cqqoixxhhmpkyvjjevek.supabase.co";
+            const SUPABASE_KEY = "sb_publishable_GSfkFIwZFSvb7TRJVhsYxQ_nS0ckHdv";
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            async function register(username,password,extra={}){
+              const {data,error}=await supabase.rpc('register_user',{
+                p_username:username,
+                p_raw_password:password,
+                p_extra:extra
+              })
+              if(error){
+                console.error(error);
+                alert(error.message);
+                return null;
+              }
+              alert("注册成功，用户ID:"+data);
+              return data;
+            }
+            async function login(username,password){
+              const {data,error}=await supabase.rpc('login_check',{
+                p_username:username,
+                p_raw_password:password
+              })
+              if(error){
+                alert(error.message);
+                return null;
+              }
+              alert("登录成功",data);
+              localStorage.setItem("userinfo",JSON.stringify(data));
+              return data;
+            }
+        </script>
     </head>
     <body>
+        <button onclick="register(prompt('账号'),prompt('密码'))">注册账号</button>
+        <button onclick="login(prompt('账号'),prompt('密码'))">登录账号</button>
+        <br>
+        <button id="地">地理知识问答</button>
         <script>
+        function 地_click(){
+        
+        }
+        function 地Click1(){
             const countryCapitalMap = new Map([
   ["中国", "北京"],
   ["阿富汗", "喀布尔"],
@@ -236,7 +276,8 @@ if(a === true){
     alert("你知道100个国家首都，超过大部分人")
 }else{
     alert("菜就多练")
-}
+}}
+        地.addEventListener('click', 地Click1);
         </script>
         <a href="https://www.crrc.com.cn/Html/News/Articles/18304.html">你要去的地方</a>
     </body>
