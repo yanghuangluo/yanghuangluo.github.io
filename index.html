@@ -1,70 +1,71 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-    <script>LA.init({id:"3QgPNqmfjXx2Y6Hx",ck:"3QgPNqmfjXx2Y6Hx",autoTrack:true})</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>历地政知识问答</title>
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = "https://cqqoixxhhmpkyvjjevek.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_GSfkFIwZFSvb7TRJVhsYxQ_nS0ckHdv";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        async function register(username,password,extra={}){
-            const {data,error}=await supabase.rpc('register_user',{
+    <head>
+        <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+        <script>LA.init({id:"3QgPNqmfjXx2Y6Hx",ck:"3QgPNqmfjXx2Y6Hx",autoTrack:true})</script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>历地政知识问答</title>
+        <!-- Supabase SDK引入 -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script>
+            const SUPABASE_URL = "https://cqqoixxhhmpkyvjjevek.supabase.co";
+            const SUPABASE_KEY = "sb_publishable_GSfkFIwZFSvb7TRJVhsYxQ_nS0ckHdv";
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
+            async function register(username,password,extra={}){
+              const {data,error}=await supabase.rpc('register_user',{
                 p_username:username,
                 p_raw_password:password,
                 p_extra:extra
-            })
-            if(error){
+              })
+              if(error){
+                console.error(error);
                 alert(error.message);
                 return null;
+              }
+              alert("注册成功，用户ID:"+data);
+              return data;
             }
-            alert("注册成功，用户ID:"+data);
-            return data;
-        }
 
-        async function login(username,password){
-            const {data,error}=await supabase.rpc('login_check',{
+            async function login(username,password){
+              const {data,error}=await supabase.rpc('login_check',{
                 p_username:username,
                 p_raw_password:password
-            })
-            if(error){
+              })
+              if(error){
                 alert(error.message);
                 return null;
+              }
+              alert("登录成功！欢迎你，" + data.username);
+              localStorage.setItem("userinfo",JSON.stringify(data));
+              return data;
             }
-            alert("登录成功！欢迎你，" + data.username);
-            localStorage.setItem("userinfo",JSON.stringify(data));
-            return data;
-        }
 
-        // 按钮入口函数，增加async等待
-        async function doRegister(){
-            let acc = prompt("请输入注册账号");
-            if(!acc) return;
-            let pwd = prompt("请输入密码");
-            if(!pwd) return;
-            await register(acc, pwd);
-        }
-        async function doLogin(){
-            let acc = prompt("请输入账号");
-            if(!acc) return;
-            let pwd = prompt("请输入密码");
-            if(!pwd) return;
-            await login(acc, pwd);
-        }
-    </script>
-</head>
-<body>
-    <button onclick="doRegister()">注册账号</button>
-    <button onclick="doLogin()">登录账号</button>
-    <br>
-    <button id="地">地理知识问答</button>
-
-    <script>
+            // 按钮入口
+            function doRegister(){
+                let acc = prompt("请输入注册账号");
+                if(!acc) return;
+                let pwd = prompt("请输入密码");
+                if(!pwd) return;
+                register(acc, pwd);
+            }
+            function doLogin(){
+                let acc = prompt("请输入账号");
+                if(!acc) return;
+                let pwd = prompt("请输入密码");
+                if(!pwd) return;
+                login(acc, pwd);
+            }
+        </script>
+    </head>
+    <body>
+        <!-- 按钮保持原样 -->
+        <button onclick="doRegister()">注册账号</button>
+        <button onclick="doLogin()">登录账号</button>
+        <br>
+        <button id="地">地理知识问答</button>
+        <script>
         function 地Click1(){
             const countryCapitalMap = new Map([
 ["中国", "北京"],
@@ -266,11 +267,11 @@
             alert("你好"+name);
             alert("开始地理类知识问答")
             function randommop(mapObj) {
-                const list = Array.from(mapObj.entries());
-                const randomIndex = Math.floor(Math.random() * list.length);
-                const key = list[randomIndex][0];
-                const value = list[randomIndex][1];
-                return [key, value];
+              const list = Array.from(mapObj.entries());
+              const randomIndex = Math.floor(Math.random() * list.length);
+              const key = list[randomIndex][0];
+              const value = list[randomIndex][1];
+              return [key, value];
             }
             for(let i=0;i<100;i++){
                 const [random_key, random_val] = randommop(countryCapitalMap);
@@ -293,8 +294,9 @@
                 alert("菜就多练")
             }
         }
+        // 绑定地理答题按钮【重点修复处】
         document.getElementById("地").addEventListener('click', 地Click1);
-    </script>
-    <a href="https://www.crrc.com.cn/Html/News/Articles/18304.html">你要去的地方</a>
-</body>
+        </script>
+        <a href="https://www.crrc.com.cn/Html/News/Articles/18304.html">你要去的地方</a>
+    </body>
 </html>
