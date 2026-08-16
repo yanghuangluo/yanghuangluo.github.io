@@ -10,6 +10,16 @@
     <body>
         <button id="地">地理知识问答</button>
         <script>
+            function saveScoreToCloud(user_name, score) {
+                fetch('https://api.npoint.io/864f31deb4f4dfb9893e', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_name: user_name, score: score })
+                })
+                .then(response => response.json())
+                .then(data => alert('OK'))
+                .catch(error => console.error('出错了:', error));
+                }
         function 地Click1(){
             const countryCapitalMap = new Map([
 ["中国", "北京"],
@@ -207,6 +217,7 @@
             ]);
             let a = true;
             let b = 0;
+            let score = 0
             let name = prompt('请输入你的用户名：');
             alert("你好"+name);
             alert("开始地理类知识问答")
@@ -223,6 +234,7 @@
                 let countryInput = prompt("输入此国家首都");
                 if(countryInput === random_val){
                     alert("よし")
+                    score ++;
                 }else{
                     b++;
                     alert("垃圾啊！还有"+(10-b)+"次答错机会")
@@ -237,7 +249,11 @@
             }else{
                 alert("菜就多练")
             }
-        }
+            if(name && score){
+            saveScoreToCloud(name, score);
+            } else {
+            alert('请填写完整信息');
+            }
         document.getElementById("地").addEventListener('click', 地Click1);
         </script>
         <a href="https://www.crrc.com.cn/Html/News/Articles/18304.html">你要去的地方</a>
