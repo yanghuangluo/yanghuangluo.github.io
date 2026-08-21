@@ -10,16 +10,7 @@
     <body>
         <button id="地">地理知识问答</button>
         <script>
-            function saveScoreToCloud(user_name, score) {
-                fetch('https://api.npoint.io/864f31deb4f4dfb9893e', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_name: user_name, score: score })
-                })
-                .then(response => response.json())
-                .then(data => alert('OK'))
-                .catch(error => console.error('出错了:', error));
-                }
+            
         function 地Click1(){
             const countryCapitalMap = new Map([
 ["中国", "北京"],
