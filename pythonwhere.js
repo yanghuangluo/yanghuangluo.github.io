@@ -1,13 +1,14 @@
-async function getAPI(){
-  const apiURL = "https://yanghuangluo.pythonwhere.com/api";
-  try{
-    const res = await fetch(apiURL);
-    const rawTEXT = await res.text();
-    console.log(rawTEXT);
-    const data = JSON.parse(resTEXT);
-    alert(data.msg);
-  }catch(err){
-    console.error(err);
-  }
+let apiUrl = "https://yanghuangluo.pythonanywhere.com/api";
+
+async function getApi(){
+    try{
+        let res = await fetch(apiUrl);
+        let rawText = await res.text();
+        console.log("原始返回：",rawText);
+        let data = JSON.parse(rawText);
+        alert("服务器数据："+data.msg);
+    }catch(err){
+        console.error("错误：",err);
+    }
 }
-getAPI();
+getApi();
