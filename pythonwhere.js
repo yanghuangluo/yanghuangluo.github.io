@@ -1,5 +1,5 @@
 async function getAPI(){
-  const apiURL "https://yanghuangluo.pythonwhere.com/api";
+  const apiURL = "https://yanghuangluo.pythonwhere.com/api";
   try{
     const res = await fetch(apiURL);
     const rawTEXT = await res.text();
