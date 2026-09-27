@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        body { font-family: -apple-system, "Segoe UI", sans-serif; background: #f5f6fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #fff; padding: 40px 48px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 320px; }
+        h1 { text-align: center; color: #333; margin: 0 0 24px; }
+        label { display: block; margin: 14px 0 6px; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #4a90e2; }
+        .btn { width: 100%; padding: 12px; margin-top: 22px; border: none; border-radius: 8px; background: #4a90e2; color: #fff; font-size: 16px; cursor: pointer; }
+        .btn:hover { background: #3a7bc8; }
+        .msg { margin-top: 14px; font-size: 14px; text-align: center; min-height: 20px; }
+        .err { color: #e74c3c; }
+        .ok { color: #27ae60; }
+        .link { text-align: center; margin-top: 14px; font-size: 14px; }
+        .link a { color: #4a90e2; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>登 录</h1>
+        <form id="loginForm">
+            <label>UserName</label>
+            <input type="text" id="UserName" required autocomplete="username">
+            <label>PassWord</label>
+            <input type="password" id="PassWord" required autocomplete="current-password">
+            <button class="btn" type="submit">登 录</button>
+        </form>
+        <div class="msg" id="msg"></div>
+        <div class="link">还没有账号？<a href="signup.html">去注册</a></div>
+    </div>
+
+    <script>
+        const API_BASE = "https://yanghuangluo.pythonanywhere.com";
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById("msg");
+            msg.className = "msg";
+            msg.textContent = "登录中...";
+
+            const UserName = document.getElementById("UserName").value.trim();
+            const PassWord = document.getElementById("PassWord").value;
+
+            try {
+                const res = await fetch(API_BASE + "/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ UserName, PassWord })
+                });
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); } catch { data = { msg: text }; }
+
+                if (res.ok) {
+                    msg.className = "msg ok";
+                    msg.textContent = "登录成功：" + (data.msg || UserName);
+                    localStorage.setItem("user", UserName);
+                    setTimeout(() => { location.href = "ideax.html"; }, 800);
+                } else {
+                    msg.className = "msg err";
+                    msg.textContent = "登录失败：" + (data.msg || res.status);
+                }
+            } catch (err) {
+                msg.className = "msg err";
+                msg.textContent = "网络错误：" + err.message;
+            }
+        });
+    </script>
+</body>
+</html>
