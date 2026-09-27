@@ -60,7 +60,7 @@
                     msg.className = "msg ok";
                     msg.textContent = "登录成功：" + (data.msg || UserName);
                     localStorage.setItem("user", UserName);
-                    setTimeout(() => { location.href = "ideax.html"; }, 800);
+                    setTimeout(() => { location.href = "idex.html"; }, 800);
                 } else {
                     msg.className = "msg err";
                     msg.textContent = "登录失败：" + (data.msg || res.status);
