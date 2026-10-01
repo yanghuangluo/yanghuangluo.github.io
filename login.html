@@ -26,8 +26,8 @@
         <form id="loginForm">
             <label>UserName</label>
             <input type="text" id="UserName" required autocomplete="username">
-            <label>PassWord</label>
-            <input type="password" id="PassWord" required autocomplete="current-password">
+            <label>UserPassword</label>
+            <input type="password" id="UserPassword" required autocomplete="current-password">
             <button class="btn" type="submit">登 录</button>
         </form>
         <div class="msg" id="msg"></div>
@@ -44,21 +44,21 @@
             msg.textContent = "登录中...";
 
             const UserName = document.getElementById("UserName").value.trim();
-            const PassWord = document.getElementById("PassWord").value;
+            const UserPassword = document.getElementById("UserPassword").value;
 
             try {
                 const res = await fetch(API_BASE + "/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ UserName, PassWord })
+                    body: JSON.stringify({ UserName, UserPassword })
                 });
                 const text = await res.text();
                 let data;
                 try { data = JSON.parse(text); } catch { data = { msg: text }; }
 
-                if (res.ok) {
+                if (res.ok && data.code === 200) {
                     msg.className = "msg ok";
-                    msg.textContent = "登录成功：" + (data.msg || UserName);
+                    msg.textContent = data.msg || "登录成功";
                     localStorage.setItem("user", UserName);
                     setTimeout(() => { location.href = "idex.html"; }, 800);
                 } else {
