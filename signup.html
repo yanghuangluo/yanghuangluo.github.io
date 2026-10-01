@@ -18,108 +18,58 @@
         .ok { color: #27ae60; }
         .link { text-align: center; margin-top: 14px; font-size: 14px; }
         .link a { color: #4a90e2; text-decoration: none; }
-        .codeBox { background: #fffbe6; border: 1px dashed #f5c542; border-radius: 6px; padding: 10px; margin-top: 12px; font-size: 14px; color: #8a6d3b; display: none; }
-        .step2 { display: none; }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>注 册</h1>
-
-        <!-- 第一步：填信息 -->
         <form id="regForm">
             <label>UserName</label>
             <input type="text" id="UserName" required autocomplete="username">
-            <label>PassWord</label>
-            <input type="password" id="PassWord" required autocomplete="new-password">
+            <label>UserPassword</label>
+            <input type="password" id="UserPassword" required autocomplete="new-password">
             <label>UserEmail</label>
             <input type="email" id="UserEmail" required autocomplete="email">
-            <button class="btn" type="submit">发送验证码</button>
+            <button class="btn" type="submit">注 册</button>
         </form>
-
-        <div class="codeBox" id="codeBox"></div>
-
-        <!-- 第二步：填验证码 -->
-        <form id="verifyForm" class="step2">
-            <label>邮箱验证码（已发送到你的邮箱）</label>
-            <input type="text" id="Code" placeholder="请输入 6 位验证码" required>
-            <button class="btn" type="submit">完成注册</button>
-        </form>
-
         <div class="msg" id="msg"></div>
         <div class="link">已有账号？<a href="login.html">去登录</a></div>
     </div>
 
     <script>
         const API_BASE = "https://yanghuangluo.pythonanywhere.com";
-        let pendingUser = "", pendingEmail = "";
 
-        const msg = document.getElementById("msg");
-        function setMsg(text, cls) { msg.className = "msg " + (cls || ""); msg.textContent = text; }
-
-        // 第一步：提交注册信息，后端发邮件并返回验证码（dev 显示）
         document.getElementById("regForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            setMsg("发送中...");
+            const msg = document.getElementById("msg");
+            msg.className = "msg";
+            msg.textContent = "注册中...";
 
             const UserName = document.getElementById("UserName").value.trim();
-            const PassWord = document.getElementById("PassWord").value;
+            const UserPassword = document.getElementById("UserPassword").value;
             const UserEmail = document.getElementById("UserEmail").value.trim();
 
             try {
                 const res = await fetch(API_BASE + "/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ UserName, PassWord, UserEmail })
+                    body: JSON.stringify({ UserName, UserPassword, UserEmail })
                 });
                 const text = await res.text();
                 let data;
                 try { data = JSON.parse(text); } catch { data = { msg: text }; }
 
-                if (res.ok) {
-                    pendingUser = UserName;
-                    pendingEmail = UserEmail;
-                    setMsg("验证码已发送，请查收邮箱", "ok");
-                    // 调试模式：后端把同一个验证码也返回给 github.io 页面展示
-                    if (data.code) {
-                        const box = document.getElementById("codeBox");
-                        box.style.display = "block";
-                        box.textContent = "【调试】验证码（同时已发往邮箱 " + UserEmail + "）：" + data.code;
-                    }
-                    document.getElementById("regForm").style.display = "none";
-                    document.getElementById("verifyForm").style.display = "block";
-                } else {
-                    setMsg("发送失败：" + (data.msg || res.status), "err");
-                }
-            } catch (err) {
-                setMsg("网络错误：" + err.message, "err");
-            }
-        });
-
-        // 第二步：校验验证码完成注册
-        document.getElementById("verifyForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            setMsg("验证中...");
-            const Code = document.getElementById("Code").value.trim();
-
-            try {
-                const res = await fetch(API_BASE + "/verify", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ UserName: pendingUser, UserEmail: pendingEmail, Code })
-                });
-                const text = await res.text();
-                let data;
-                try { data = JSON.parse(text); } catch { data = { msg: text }; }
-
-                if (res.ok) {
-                    setMsg("注册成功，正在跳转登录...", "ok");
+                if (res.ok && data.code === 200) {
+                    msg.className = "msg ok";
+                    msg.textContent = data.msg || "注册成功，正在跳转登录...";
                     setTimeout(() => { location.href = "login.html"; }, 1000);
                 } else {
-                    setMsg("验证失败：" + (data.msg || res.status), "err");
+                    msg.className = "msg err";
+                    msg.textContent = "注册失败：" + (data.msg || res.status);
                 }
             } catch (err) {
-                setMsg("网络错误：" + err.message, "err");
+                msg.className = "msg err";
+                msg.textContent = "网络错误：" + err.message;
             }
         });
     </script>
